@@ -1,4 +1,5 @@
 import express from "express";
+import { appError } from "./src/common/helpers/app-error.helper.js";
 import rootRouter from "./src/routers/root.router.js";
 
 const app = express();
@@ -7,8 +8,8 @@ app.get("", (request, response, next) => {
     response.json("Hello world");
 });
 
-app.use("/api", rootRouter)
-
+app.use("/api", rootRouter);
+app.use(appError);
 
 const PORT = 3069;
 app.listen(PORT, () => {
@@ -22,3 +23,8 @@ app.listen(PORT, () => {
 
 // js Version mới: es-module
 // import express from "express"
+
+// npx prisma db pull: kéo database vào code và tạo ra model
+// npx prisma generate: tạo ra object CLIENT để sử dụng trong code (để dev)
+
+// EXPRESSS verssion <5: phải bắt try/catch trong controller

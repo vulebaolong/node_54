@@ -1,8 +1,9 @@
 // const { Sequelize } = require('sequelize');
 
 import { Sequelize } from "sequelize";
+import { DATABASE_URL } from "../constant/app.constant.js";
 
-const sequelize = new Sequelize("mysql://root:12345@localhost:3307/cyber_community");
+const sequelize = new Sequelize(DATABASE_URL);
 
 try {
     await sequelize.authenticate();
