@@ -8,6 +8,8 @@ app.get("", (request, response, next) => {
     response.json("Hello world");
 });
 
+app.use(express.json())
+
 app.use("/api", rootRouter);
 app.use(appError);
 

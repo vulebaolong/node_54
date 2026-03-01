@@ -1,22 +1,17 @@
+import { responseError } from "./response.helper.js";
+
 export const appError = (err, req, res, next) => {
     console.log("mid đặc biệt bắt lỗi", err);
 
-    const obj = {
-        level1: 1,
-        level2: 2,
+    console.log({
+        cause: err?.cause,
+        message: err?.message,
+        name: err?.name,
+        stack: err?.stack,
+        code: err?.code,
+    });
+    const response = responseError(err?.message, err?.code, err?.stack);
 
-    }
-    console.log(obj.level2);
-
-
-    const tenkey = "level1"
-    console.log(
-
-        
-        obj?.[tenkey]
-    
-    
-    );
-
-    res.status(500).json(err?.stack);
+    console.log(response);
+    res.status(response.statusCode).json(response);
 };
