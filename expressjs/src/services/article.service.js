@@ -1,3 +1,4 @@
+import { buildQueryPrisma } from "../common/helpers/build-query-prisma.helper.js";
 import { prisma } from "../common/prisma/connect.prisma.js";
 import sequelize from "../common/sequelize/connect.sequelize.js";
 import Article from "../models/article.model.js";
@@ -15,39 +16,16 @@ export const artcileService = {
         // sequelize
         // const resultSequelize = await Article.findAll();
 
-        let { page, pageSize } = req.query;
-
-        const pageDefault = 1;
-        const pageSizeDefault = 3;
-
-        // ĐẢM BẢO LÀ SỐ
-        page = Number(page);
-        pageSize = Number(pageSize);
-
-        // nếu gửi chữ
-        page = Number(page) || pageDefault;
-        pageSize = Number(pageSize) || pageSizeDefault;
-
-        // nếu mà số âm
-        if (page < 1) page = pageDefault;
-        if (pageSize < 1) pageSize = pageSizeDefault;
-
-        const index = (page - 1) * pageSize;
-
-        console.log({ page, pageSize, index });
+        const { index, page, pageSize, where } = buildQueryPrisma(req);
 
         const resultPrismaPromise = prisma.articles.findMany({
-            where: {
-                isDeleted: false,
-            },
+            where: where,
             skip: index, // skip tương đương với OFFSET
             take: pageSize, // take tương đương với LIMIT
         });
         const totalItemPromise = prisma.articles.count({
             // ở findMany mà where cái gì thì đưa vào count giống như vậy
-            where: {
-                isDeleted: false,
-            },
+            where: where,
         });
 
         const [resultPrisma, totalItem] = await Promise.all([resultPrismaPromise, totalItemPromise]);

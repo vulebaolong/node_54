@@ -11,6 +11,9 @@ CREATE DATABASE IF NOT EXISTS cyber_community;
 DROP DATABASE IF EXISTS demo_1;
 DROP DATABASE IF EXISTS demo_2;
 
+ALTER TABLE `Users`
+ADD COLUMN `password` VARCHAR(255)
+
 -- table
 CREATE TABLE `User` (
 	`id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -19,7 +22,8 @@ CREATE TABLE `User` (
 	`avatar` TEXT,
 	`age` INT,
 	`totpSecret` VARCHAR(255),
-	`googleId` VARCHAR(255)
+	`googleId` VARCHAR(255),
+	`password` VARCHAR(255),
 )
 
 -- đổi tên TABLE

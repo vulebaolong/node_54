@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/common/prisma/generated/prisma"
+  provider     = "prisma-client-js"
+  output       = "../src/common/prisma/generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -83,6 +83,7 @@ model Users {
   deletedAt     DateTime?       @db.Timestamp(0)
   createdAt     DateTime        @default(now()) @db.Timestamp(0)
   updatedAt     DateTime        @default(now()) @db.Timestamp(0)
+  password      String?         @db.VarChar(255)
   Articles      Articles[]
   Articles_demo Articles_demo[]
   Orders        Orders[]

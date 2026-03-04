@@ -1,14 +1,26 @@
 import express from "express";
 import { appError } from "./src/common/helpers/app-error.helper.js";
 import rootRouter from "./src/routers/root.router.js";
+import cors from "cors";
 
 const app = express();
+
+// xử lý cors bằng cơm
+// app.use((req, res, next) => {
+//     console.log(req.headers);
+
+//     res.setHeader("access-control-allow-methods", "GET,HEAD,PUT,PATCH,DELETE,POST");
+//     res.setHeader("access-control-allow-headers", "content-type")
+//     res.setHeader("access-control-allow-origin", "*")
+//     next();
+// });
+app.use(cors({ origin: ["http://localhost:3000", "google.com"] }));
 
 app.get("", (request, response, next) => {
     response.json("Hello world");
 });
 
-app.use(express.json())
+app.use(express.json());
 
 app.use("/api", rootRouter);
 app.use(appError);
