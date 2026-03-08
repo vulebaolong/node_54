@@ -14,10 +14,17 @@ const adapter = new PrismaMariaDb({
     port: url.port, // code mẫu trong doc không có port (LƯU Ý phải thêm port)
     connectionLimit: 5,
 });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+    adapter,
+    omit: {
+        users: {
+            password: true,
+        },
+    },
+});
 
 try {
-    await prisma.$queryRaw`SELECT 1+1 AS result`
+    await prisma.$queryRaw`SELECT 1+1 AS result`;
     console.log("✅ [PRISMA] Connection has been established successfully.");
 } catch (error) {
     console.error("❌ Unable to connect to the database:", error);
