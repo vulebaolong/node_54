@@ -9,6 +9,7 @@ const articleRouter = express.Router();
 articleRouter.get(
     "",
     (req, res, next) => {
+        req.headers
         console.log("mid 1");
 
         const payload = "dữ liệu của mid 1";

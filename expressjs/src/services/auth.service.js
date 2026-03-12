@@ -1,4 +1,4 @@
-import { BadRequestException } from "../common/helpers/exception.helper.js";
+import { BadRequestException, UnauthorizedException } from "../common/helpers/exception.helper.js";
 import { prisma } from "../common/prisma/connect.prisma.js";
 import bcrypt from "bcrypt";
 import { tokenService } from "./token.service.js";
@@ -72,12 +72,13 @@ export const authService = {
         }
 
         const accessToken = tokenService.createAccessToken(userExist.id);
+        const refreshToken = tokenService.createRefreshToken(userExist.id);
 
         // console.log({ email, password, userExist, isPassword });
 
         return {
             accessToken: accessToken,
-            refreshToken: "refreshToken",
+            refreshToken: refreshToken,
         };
     },
 
@@ -85,5 +86,53 @@ export const authService = {
         // console.log("getInfo service", req.user);
 
         return req.user;
+    },
+
+    // FE gọi khi accessToken đang bị hết hạn
+    async refreshToken(req) {
+        const { accessToken, refreshToken } = req.cookies;
+
+        if (!accessToken) {
+            throw new UnauthorizedException("Không có accessToken để kiểm tra");
+        }
+
+        if (!refreshToken) {
+            throw new UnauthorizedException("Không có refreshToken để kiểm tra.");
+        }
+
+        // tại vì accessToken đang bị hết hạn, FE đang muốn làm mới
+        // cho nên không được kiểm tra hạn của accessToken { ignoreExpiration: true }
+        const decodeAccessToken = tokenService.verifyAccessToken(accessToken, { ignoreExpiration: true });
+        const decodeRefreshToken = tokenService.verifyRefreshToken(refreshToken);
+
+        if (decodeAccessToken.userId !== decodeRefreshToken.userId) {
+            throw new UnauthorizedException("Token không hợp lệ..");
+        }
+
+        const userExits = await prisma.users.findUnique({
+            where: {
+                id: decodeAccessToken.userId,
+            },
+        });
+
+        const accessTokenNew = tokenService.createAccessToken(userExits.id);
+        const refreshTokenNew = tokenService.createRefreshToken(userExits.id);
+
+        // thời hạn của refreshToken là 1 ngày
+
+        // Trường hợp 1: trả về cả cặp 2 token (rotate)
+        // refreshToken luôn được làm mới: tự động gia hạn thời gian login
+        // nếu trong 1 ngày, người dùng này không sử dụng => logout
+
+        // Trường hợp 2: trả về 1 accessToken
+        // refreshToken sẽ không được gia hạn
+        // đúng 1 ngày người dùng sẽ luôn phải login lại
+
+        // console.log({ accessToken, refreshToken, decodeAccessToken, decodeRefreshToken, userExits });
+
+        return {
+            accessToken: accessTokenNew,
+            refreshToken: refreshTokenNew,
+        };
     },
 };
