@@ -24,15 +24,17 @@ app.use(express.json());
 // để lấy được cookie (đảm bảo trước "/api")
 app.use(cookieParser());
 app.use(logApi("product"));
-initLoginGooglePassport()
+initLoginGooglePassport();
+app.use(express.static("public"));
 
 app.use("/api", rootRouter);
 app.use(appError);
 
 const PORT = 3069;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server online at port: ${PORT}`);
 });
+server.requestTimeout = 0;
 
 // js Version cũ: common-js
 // const express =  required("express")
