@@ -10,7 +10,7 @@ articleRouter.get(
     "",
     (req, res, next) => {
         req.headers
-        console.log("mid 1");
+        // console.log("mid 1");
 
         const payload = "dữ liệu của mid 1";
 
@@ -24,8 +24,8 @@ articleRouter.get(
         }
     },
     (req, res, next) => {
-        console.log("mid 2");
-        console.log(req.payload);
+        // console.log("mid 2");
+        // console.log(req.payload);
         // (new Error).
 
         // const err = new Error("lỗi rồi");
@@ -35,8 +35,8 @@ articleRouter.get(
         next();
     },
     (req, _, next) => {
-        console.log("mid 3");
-        console.log(req.payload);
+        // console.log("mid 3");
+        // console.log(req.payload);
         next();
     },
 
@@ -44,6 +44,8 @@ articleRouter.get(
 );
 // CREATE
 articleRouter.post("/", articleController.create)
+// FIND_ONE 
+articleRouter.get("/:articleId", articleController.findOne)
 // UPDATE (patch/put)
 articleRouter.put("/:articleId", articleController.update)
 // DELETE

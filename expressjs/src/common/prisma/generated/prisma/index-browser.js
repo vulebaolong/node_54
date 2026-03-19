@@ -186,6 +186,40 @@ exports.Prisma.UsersScalarFieldEnum = {
   password: 'password'
 };
 
+exports.Prisma.ChatGroupMembersScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  chatGroupId: 'chatGroupId',
+  deletedBy: 'deletedBy',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChatGroupsScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  ownerId: 'ownerId',
+  deletedBy: 'deletedBy',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChatMessagesScalarFieldEnum = {
+  id: 'id',
+  chatGroupId: 'chatGroupId',
+  userIdSender: 'userIdSender',
+  messageText: 'messageText',
+  deletedBy: 'deletedBy',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -222,13 +256,24 @@ exports.Prisma.UsersOrderByRelevanceFieldEnum = {
   password: 'password'
 };
 
+exports.Prisma.ChatGroupsOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.ChatMessagesOrderByRelevanceFieldEnum = {
+  messageText: 'messageText'
+};
+
 
 exports.Prisma.ModelName = {
   Articles: 'Articles',
   Articles_demo: 'Articles_demo',
   Foods: 'Foods',
   Orders: 'Orders',
-  Users: 'Users'
+  Users: 'Users',
+  ChatGroupMembers: 'ChatGroupMembers',
+  ChatGroups: 'ChatGroups',
+  ChatMessages: 'ChatMessages'
 };
 
 /**

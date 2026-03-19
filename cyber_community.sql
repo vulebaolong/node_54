@@ -377,6 +377,51 @@ VALUES
 	);
 
 
+CREATE TABLE IF NOT EXISTS `ChatGroups` (
+	`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	-- mặc định luôn luôn có
+	`name` VARCHAR(255),
+	`ownerId` INT,
+	FOREIGN KEY (`ownerId`) REFERENCES `Users`(`id`),
+	-- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS `ChatGroupMembers` (
+	`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	-- mặc định luôn luôn có
+	`userId` INT,
+	`chatGroupId` INT,
+	FOREIGN KEY (`userId`) REFERENCES `Users`(`id`),
+	FOREIGN KEY (`chatGroupId`) REFERENCES `ChatGroups`(`id`),
+	-- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS `ChatMessages` (
+	`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	-- mặc định luôn luôn có
+	`chatGroupId` INT,
+	`userIdSender` INT,
+	`messageText` TEXT,
+	FOREIGN KEY (`chatGroupId`) REFERENCES `ChatGroups`(`id`),
+	FOREIGN KEY (`userIdSender`) REFERENCES `Users`(`id`),
+	-- mặc định luôn luôn có
+	`deletedBy` INT NOT NULL DEFAULT 0,
+	`isDeleted` TINYINT(1) NOT NULL DEFAULT 0,
+	`deletedAt` TIMESTAMP NULL DEFAULT NULL,
+	`createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 
 
 

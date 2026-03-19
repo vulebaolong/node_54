@@ -23,8 +23,8 @@ export const artcileService = {
             skip: index, // skip tương đương với OFFSET
             take: pageSize, // take tương đương với LIMIT
             include: {
-                Users: true
-            }
+                Users: true,
+            },
         });
         const totalItemPromise = prisma.articles.count({
             // ở findMany mà where cái gì thì đưa vào count giống như vậy
@@ -42,6 +42,18 @@ export const artcileService = {
             pageSize: pageSize,
             items: resultPrisma,
         };
+    },
+
+    async findOne(req) {
+        const { articleId } = req.params;
+        
+        const article = await prisma.articles.findUnique({
+            where: {
+                id: Number(articleId)
+            }
+        })
+
+        return article
     },
 
     // Body

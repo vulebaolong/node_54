@@ -5,6 +5,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { logApi } from "./src/common/middlewares/log-api.middleware.js";
 import { initLoginGooglePassport } from "./src/common/passport/login-google.passport.js";
+import swaggerUi from "swagger-ui-express";
+import { swaggerDocument } from "./src/common/swagger/init.swagger.js";
+import { initSocket } from "./src/common/socket/init.socket.js";
 
 const app = express();
 
@@ -27,11 +30,17 @@ app.use(logApi("product"));
 initLoginGooglePassport();
 app.use(express.static("public"));
 
+// swwagger
+// http://localhost:3069/api-docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 app.use("/api", rootRouter);
 app.use(appError);
 
+const httpServer = initSocket(app);
+
 const PORT = 3069;
-const server = app.listen(PORT, () => {
+const server = httpServer.listen(PORT, () => {
     console.log(`Server online at port: ${PORT}`);
 });
 server.requestTimeout = 0;
