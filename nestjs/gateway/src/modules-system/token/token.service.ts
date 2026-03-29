@@ -1,6 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import * as jwt from "jsonwebtoken"
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from 'src/common/constant/app.constant';
+import * as jwt from 'jsonwebtoken';
+import {
+  ACCESS_TOKEN_SECRET,
+  REFRESH_TOKEN_SECRET,
+} from 'src/common/constant/app.constant';
 
 @Injectable()
 export class TokenService {
@@ -10,9 +13,13 @@ export class TokenService {
     }
 
     // accessToken <=> AT (ghi tắt)
-    const accessToken = jwt.sign({ userId: userId }, ACCESS_TOKEN_SECRET as string, {
-      expiresIn: '5s',
-    });
+    const accessToken = jwt.sign(
+      { userId: userId },
+      ACCESS_TOKEN_SECRET as string,
+      {
+        expiresIn: '5s',
+      },
+    );
 
     return accessToken;
   }
@@ -22,19 +29,31 @@ export class TokenService {
     }
 
     // refreshToken <=> RT (ghi tắt)
-    const refreshToken = jwt.sign({ userId: userId }, REFRESH_TOKEN_SECRET as string, {
-      expiresIn: '1d',
-    });
+    const refreshToken = jwt.sign(
+      { userId: userId },
+      REFRESH_TOKEN_SECRET as string,
+      {
+        expiresIn: '1d',
+      },
+    );
 
     return refreshToken;
   }
 
-  verifyAccessToken(acccessToken, option) {
-    const decode = jwt.verify(acccessToken, ACCESS_TOKEN_SECRET as string, option);
+  verifyAccessToken(acccessToken, option?: jwt.VerifyOptions) {
+    const decode = jwt.verify(
+      acccessToken,
+      ACCESS_TOKEN_SECRET as string,
+      option,
+    );
     return decode;
   }
-  verifyRefreshToken(refreshToken, option) {
-    const decode = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET as string, option);
+  verifyRefreshToken(refreshToken, option?: jwt.VerifyOptions) {
+    const decode = jwt.verify(
+      refreshToken,
+      REFRESH_TOKEN_SECRET as string,
+      option,
+    );
     return decode;
   }
 }
