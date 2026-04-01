@@ -14,6 +14,10 @@ import { CACHE_MANAGER, CacheModule } from '@nestjs/cache-manager';
 import KeyvRedis from '@keyv/redis';
 import { REDIS_URL } from './common/constant/app.constant';
 import type { Cache } from 'cache-manager';
+import { ElasticSearchModule } from './modules-system/elastic-search/elastic-search.module';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { SearchAppModule } from './modules-api/search-app/search-app.module';
+import { TotpModule } from './modules-api/totp/totp.module';
 
 @Module({
   imports: [
@@ -25,6 +29,9 @@ import type { Cache } from 'cache-manager';
       isGlobal: true,
       stores: [new KeyvRedis(REDIS_URL)],
     }),
+    ElasticSearchModule,
+    SearchAppModule,
+    TotpModule,
   ],
   controllers: [AppController],
   providers: [
@@ -48,14 +55,24 @@ import type { Cache } from 'cache-manager';
   ],
 })
 export class AppModule {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly elasticsearchService: ElasticsearchService,
+  ) {}
 
   async onModuleInit() {
     try {
       await this.cacheManager.get('healthcheck');
-      console.log('Kết nối redis thành công');
+      console.log('✅ [REDIS] Kết nối thành công');
     } catch (error) {
-      console.log({ error });
+      console.log({ cacheManager: error });
+    }
+
+    try {
+      const reuslt = await this.elasticsearchService.ping()
+      console.log('✅ [ELASTIC-SEARCH] Kết nối thành công', reuslt);
+    } catch (error) {
+      console.log({ elasticSearch: error });
     }
   }
 }
