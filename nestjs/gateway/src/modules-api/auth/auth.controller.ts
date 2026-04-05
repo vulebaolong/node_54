@@ -43,6 +43,11 @@ export class AuthController {
     if (user.totpSecret) {
       user.isTotp = true;
     }
+
+
+    delete user.password
+    delete user.totpSecret
+
     return user;
   }
 
