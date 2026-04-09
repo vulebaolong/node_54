@@ -24,7 +24,7 @@ export class EmailController {
   }
 
   @MessagePattern('updateEmail')
-  update(@Payload() updateEmailDto: UpdateEmailDto) {
+  update(@Payload() updateEmailDto: any) {
     return this.emailService.update(updateEmailDto.id, updateEmailDto);
   }
 
