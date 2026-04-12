@@ -1,0 +1,53 @@
+services:
+  # docker run --name some-redis -d -p 6380:6379 redis:latest
+  redis:
+    container_name: some-redis_dc
+    image: redis:latest
+    ports:
+      - 6380:6379
+
+  # docker run --name es01 --net elastic -p 9200:9200 -it -m 1GB docker.elastic.co/elasticsearch/elasticsearch:9.3.2
+  # docker exec -it es01_dc /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+  # docker exec -it es01_dc /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic --url https://localhost:9200
+  elastic:
+    container_name: es01_dc
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.3.2
+    ports:
+      - 9200:9200
+    mem_limit: 1g
+
+  # docker run --detach --hostname my-rabbit --name some-rabbit \
+  #     --env RABBITMQ_DEFAULT_USER=user \
+  #     --env RABBITMQ_DEFAULT_PASS=password \
+  #     --publish 15672:15672 \
+  #     --publish 5672:5672 \
+  #      rabbitmq:management
+  rabbitmq:
+    container_name: some-rabbit_dc
+    image: rabbitmq:management
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+
+  # docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:tag
+  database:
+    container_name: node_54_dc
+    image: mysql:latest
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+
+  gateway:
+    container_name: con-gateway_dc
+    image: img-gateway
+    ports:
+      - 3070:3069
+    env_file:
+      - .env.production
+
+  # email:
+  # order:
