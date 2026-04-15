@@ -4,6 +4,7 @@ import { UpdateEmailDto } from './dto/update-email.dto';
 import { transporter } from 'src/common/nodemailer/init.nodemailer';
 import * as nodemailer from 'nodemailer';
 import { HttpService } from '@nestjs/axios';
+import { OLLAMA_URL } from 'src/common/constant/app.constant';
 
 @Injectable()
 export class EmailService {
@@ -26,7 +27,7 @@ export class EmailService {
       `
 
       const { data } = await this.httpService.axiosRef.post(
-        'http://localhost:11434/api/generate',
+        OLLAMA_URL!,
         {
           model: 'llama3.2',
           prompt: prompt,

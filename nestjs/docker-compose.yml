@@ -29,8 +29,8 @@ services:
       - 15672:15672
       - 5672:5672
     environment:
-      - RABBITMQ_DEFAULT_USER=user
-      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
 
   # docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:tag
   database:
@@ -39,15 +39,32 @@ services:
     ports:
       - 3307:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+  # docker run -d -p 11434:11434 -v ~/.ollama/root/.ollama --name ollama alpine/ollama
+  # docker exec -ti con-ollama_dc ollama pull llama3.2
+  ollama:
+    container_name: con-ollama_dc
+    image: alpine/ollama:latest
+    ports:
+      - 11434:11434
 
   gateway:
     container_name: con-gateway_dc
-    image: img-gateway
+    image: vulebaolong/img-gateway:latest
     ports:
       - 3070:3069
     env_file:
-      - .env.production
+      - .env
 
-  # email:
-  # order:
+  email:
+    container_name: con-email_dc
+    image: vulebaolong/img-email:latest
+    env_file:
+      - .env
+
+  order:
+    container_name: con-order_dc
+    image: vulebaolong/img-order:latest
+    env_file:
+      - .env

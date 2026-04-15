@@ -1,0 +1,37 @@
+server {
+    listen 80;
+    server_name gateway.vulebaolong.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    client_max_body_size 100M;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    # Cloudflare Origin Certificate
+    ssl_certificate     /etc/ssl/cf-origin/vulebaolong_ssl_certificate.pem;
+    ssl_certificate_key /etc/ssl/cf-origin/vulebaolong_ssl_certificate_key.pem;
+
+    server_name gateway.vulebaolong.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:3070;
+
+        proxy_http_version 1.1;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-Port  443;
+
+        # WebSocket (socket.io) trên cùng port
+        proxy_set_header Upgrade           $http_upgrade;
+        proxy_set_header Connection        "upgrade";
+
+        # Giữ log/streaming ổn định
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_read_timeout 3600;
+    }
+}
